@@ -12,13 +12,24 @@ fn main() {
 
         let mut guess = String::new();
 
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed to read line");
+        // io::stdin()
+        //     .read_line(&mut guess)
+        //     .expect("Failed to read line");
+
+        //mejor forma de manejar el error
+        if let Err(_e) = io::stdin().read_line(&mut guess) {
+            continue
+        }
 
         println!("Tu numero es: {guess}");
 
-        let guess: u32 = guess.trim().parse().expect("Please type a number!");
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("No se ha ingresado un numero!");
+                continue
+            }
+        };
 
         match guess.cmp(&secret_number) {
             Ordering::Less => println!("To small!"),
@@ -28,5 +39,6 @@ fn main() {
                 break;
             },
         }
+
     }
 }
