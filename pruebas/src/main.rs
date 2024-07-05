@@ -47,19 +47,37 @@ fn main() {
 
     let foo = Foo { x: 42 };
 
-    let foo = do_something(foo);
+    // let foo = do_something(foo);
 
     // println!("Regreso: {}", foo.x); //la variable foo ya no se puede utilizar.
+
+    // prueba_indireccion();
+
+    prueba_referencia_en_referencia();
 
 }
 
 fn prueba_indireccion() {
-    let mut foo = 42;
-    let f = &mut foo;
-    let bar = *f; // get a copy of the owner's value
-    *f = 13;      // set the reference's owner's value
-    println!("{}", bar);
-    println!("{}", foo);
+    let x = 5;
+    let y = &x; // y is a reference to x
+
+    println!("x: {}", x);
+    println!("y: {}", y); // prints the reference to x
+    println!("*y: {}", *y); // dereferences y to access the value of x
+}
+
+fn prueba_referencia_en_referencia() {
+    let mut foo = Foo { x: 42 };
+    let x = &mut foo.x;
+    *x = 13;
+    // x is dropped here allow us to create a non-mutable reference
+    let y = do_something2(&foo);
+    println!("{}", y);
+    println!("x: {}", foo.x);
+}
+
+fn do_something2(a: &Foo) -> &i32 {
+    return &a.x;
 }
 
 fn do_something(f: Foo) -> Foo{
