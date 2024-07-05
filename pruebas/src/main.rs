@@ -35,13 +35,39 @@ fn main() {
     // println!("{:?}", y); // Output: Some(150)
 
     let y = x.checked_sub(z as u8);
-    
+
     if let Some(value) = y {
         // println!("Value: {}", value);
-    }else {
+    } else {
         // println!("Overflow");
     }
 
     let remainder = 10 % 3;
-    println!("Valor: {}", remainder);
+    // println!("Valor: {}", remainder);
+
+    let foo = Foo { x: 42 };
+
+    let foo = do_something(foo);
+
+    // println!("Regreso: {}", foo.x); //la variable foo ya no se puede utilizar.
+
+}
+
+fn prueba_indireccion() {
+    let mut foo = 42;
+    let f = &mut foo;
+    let bar = *f; // get a copy of the owner's value
+    *f = 13;      // set the reference's owner's value
+    println!("{}", bar);
+    println!("{}", foo);
+}
+
+fn do_something(f: Foo) -> Foo{
+    // println!("do_something: {}", f.x);
+
+    f
+}
+
+struct Foo {
+    x: i32,
 }
