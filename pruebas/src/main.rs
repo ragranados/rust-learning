@@ -51,10 +51,16 @@ fn main() {
 
     // println!("Regreso: {}", foo.x); //la variable foo ya no se puede utilizar.
 
-    // prueba_indireccion();
+    prueba_string();
 
-    prueba_referencia_en_referencia();
+}
 
+fn prueba_string(){
+    let mut s = String::from("Nueva");
+
+    s.push_str(" String!");
+
+    println!("{}", s);
 }
 
 fn prueba_indireccion() {
