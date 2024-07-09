@@ -1,5 +1,9 @@
 #![allow(unused)]
 fn main() {
+    let a: &'static str = "Hola";
+    let a = "Hola 🦀".chars().collect::<Vec<char>>();
+    println!("{}", a.len());
+
     let mut s = String::from("Nueva");
 
     // let mut s2 = s.clone();
