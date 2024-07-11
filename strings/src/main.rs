@@ -13,7 +13,22 @@ fn main() {
     // println!("{}", s);
     // println!("{}", s2);
 
-    first_word(&s);
+    // first_word(&s);
+
+    let s1 = String::from("Prueba ");
+    let s2 = "de String".to_string();
+    let s3 = "(de nuevo)".to_string();
+
+    // let s3 = s1 + &s2;
+
+    let s = format!("{s1}{s2} {s3}");
+    println!("{s}");
+
+    let chars = s.chars();
+
+    for c in chars {
+        // println!("{c}");
+    }
 }
 
 fn first_word(s: &String) -> &str {
@@ -22,6 +37,8 @@ fn first_word(s: &String) -> &str {
     for (i, &item) in bytes.iter().enumerate() {
         println!("Indice: {}, {}", i, item);
     }
+
+    
 
     &s[..]
 }
