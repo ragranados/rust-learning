@@ -13,5 +13,5 @@ fn main() {
 
     println!("{score}");
 
-    scores.entry(String::)
+    // scores.entry(String::)
 }
