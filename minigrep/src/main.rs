@@ -8,11 +8,17 @@ fn main() {
         process::exit(1);
     });
 
-    run(config);
+    println!("Buscando {} en {}", config.query, config.file_path);
+
+    let run_result = run(config);
+
+    if let Err(e) = run_result {
+        println!("Error en la aplicacion: {e}");
+        process::exit(1);
+    }
 }
 
 fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    //"Should have been able to read the file"
     let contents = fs::read_to_string(config.file_path)?;
 
     println!("Con el texto:\n{contents}");
