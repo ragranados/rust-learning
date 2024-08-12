@@ -26,7 +26,7 @@ async fn manual_hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let server_factory = || {
         App::new()
             .app_data(web::Data::new(AppState {
                 app_name: String::from("Actix Web"),
@@ -35,8 +35,10 @@ async fn main() -> std::io::Result<()> {
             // .service(hello)
             .service(echo)
             .route("/hey", web::get().to(manual_hello))
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+    };
+
+    HttpServer::new(server_factory)
+        .bind(("127.0.0.1", 8080))?
+        .run()
+        .await
 }
