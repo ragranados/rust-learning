@@ -1,0 +1,6 @@
+[package]
+name = "reference_cycles_leak"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
