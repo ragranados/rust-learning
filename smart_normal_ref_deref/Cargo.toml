@@ -1,0 +1,6 @@
+[package]
+name = "smart_normal_ref_deref"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
