@@ -17,3 +17,11 @@ trait State {}
 struct Draft {}
 
 impl State for Draft {}
+
+struct PendingReview {}
+
+impl State for PendingReview {}
+
+struct Published {}
+
+impl State for Published {}
