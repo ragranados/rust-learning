@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 pub struct Post {
     state: Option<Box<dyn State>>,
     content: String,
@@ -19,6 +20,10 @@ impl Post {
         self.state.as_ref().unwrap().content(self)
     }
 
+    pub fn print_state(&self) {
+        println!("Estado: {:?}", &self.state)
+    }
+
     pub fn request_review(&mut self) {
         if let Some(s) = self.state.take() {
             self.state = Some(s.request_review())
@@ -30,23 +35,35 @@ impl Post {
             self.state = Some(s.aprove())
         }
     }
+
+    pub fn reject(&mut self) {
+        if let Some(s) = self.state.take() {
+            self.state = Some(s.reject())
+        }
+    }
 }
 
-trait State {
+trait State: Debug {
     fn request_review(self: Box<Self>) -> Box<dyn State>;
 
     fn aprove(self: Box<Self>) -> Box<dyn State>;
+
+    fn reject(self: Box<Self>) -> Box<dyn State>;
 
     fn content<'a>(&self, _post: &'a Post) -> &'a str {
         ""
     }
 }
 
+#[derive(Debug)]
 struct Draft {}
 
 impl State for Draft {
     fn request_review(self: Box<Self>) -> Box<dyn State> {
         Box::new(PendingReview {})
+    }
+    fn reject(self: Box<Self>) -> Box<dyn State> {
+        self
     }
 
     fn aprove(self: Box<Self>) -> Box<dyn State> {
@@ -54,6 +71,7 @@ impl State for Draft {
     }
 }
 
+#[derive(Debug)]
 struct PendingReview {}
 
 impl State for PendingReview {
@@ -61,19 +79,28 @@ impl State for PendingReview {
         self
     }
 
+    fn reject(self: Box<Self>) -> Box<dyn State> {
+        Box::new(Draft {})
+    }
+
     fn aprove(self: Box<Self>) -> Box<dyn State> {
         Box::new(Published {})
     }
 }
 
+#[derive(Debug)]
 struct Published {}
 
 impl State for Published {
-    fn aprove(self: Box<Self>) -> Box<dyn State> {
+    fn request_review(self: Box<Self>) -> Box<dyn State> {
         self
     }
 
-    fn request_review(self: Box<Self>) -> Box<dyn State> {
+    fn reject(self: Box<Self>) -> Box<dyn State> {
+        self
+    }
+
+    fn aprove(self: Box<Self>) -> Box<dyn State> {
         self
     }
 

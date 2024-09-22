@@ -13,10 +13,21 @@ fn main() {
     post_one.request_review();
 
     println!("Post content: {}", post_one.content());
+    post_one.print_state();
+
+    post_one.reject();
+
+    println!("Post content: {}", post_one.content());
+    post_one.print_state();
+
+    post_one.request_review();
+
+    println!("Post content: {}", post_one.content());
 
     post_one.aprove();
 
     println!("Post content: {}", post_one.content());
+    post_one.print_state();
 
     println!("Example with Enums: ");
 
