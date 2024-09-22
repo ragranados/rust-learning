@@ -33,8 +33,14 @@ impl Post {
     }
 
     pub fn aprove(&mut self) {
+        self.num_aproves += 1;
+
+        if self.num_aproves < 2 {
+            return;
+        };
+
         if let Some(s) = self.state.take() {
-            self.state = Some(s.aprove(self))
+            self.state = Some(s.aprove())
         }
     }
 
@@ -48,7 +54,7 @@ impl Post {
 trait State: Debug {
     fn request_review(self: Box<Self>) -> Box<dyn State>;
 
-    fn aprove(self: Box<Self>, post: &mut Post) -> Box<dyn State>;
+    fn aprove(self: Box<Self>) -> Box<dyn State>;
 
     fn reject(self: Box<Self>) -> Box<dyn State>;
 
@@ -68,7 +74,7 @@ impl State for Draft {
         self
     }
 
-    fn aprove(self: Box<Self>, _post: &mut Post) -> Box<dyn State> {
+    fn aprove(self: Box<Self>) -> Box<dyn State> {
         self
     }
 }
@@ -85,14 +91,8 @@ impl State for PendingReview {
         Box::new(Draft {})
     }
 
-    fn aprove(self: Box<Self>, post: &mut Post) -> Box<dyn State> {
-        post.num_aproves += 1;
-
-        if post.num_aproves == 2 {
-            Box::new(Published {})
-        } else {
-            self
-        }
+    fn aprove(self: Box<Self>) -> Box<dyn State> {
+        Box::new(Published {})
     }
 }
 
@@ -108,7 +108,7 @@ impl State for Published {
         self
     }
 
-    fn aprove(self: Box<Self>, _post: &mut Post) -> Box<dyn State> {
+    fn aprove(self: Box<Self>) -> Box<dyn State> {
         self
     }
 
