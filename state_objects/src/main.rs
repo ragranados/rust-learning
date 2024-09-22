@@ -1,4 +1,5 @@
-use state_objects::Post;
+use state_objects::example_with_state_parttern::Post;
+
 
 fn main() {
     let mut post_one = Post::new();
