@@ -27,8 +27,13 @@ fn main() {
     post_one.aprove();
 
     println!("Post content: {}", post_one.content());
+
+    post_one.aprove();
+
+    println!("Post content: {}", post_one.content());
     post_one.print_state();
 
+    //Second example
     println!("Example with Enums: ");
 
     let mut post_two = PostEnum::new();
