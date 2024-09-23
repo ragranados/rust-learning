@@ -16,6 +16,7 @@ fn main() {
     post_one.print_state();
 
     post_one.reject();
+    post_one.add_text(" Added?");
 
     println!("Post content: {}", post_one.content());
     post_one.print_state();
@@ -25,6 +26,7 @@ fn main() {
     println!("Post content: {}", post_one.content());
 
     post_one.aprove();
+    post_one.add_text("Not Added?");
 
     println!("Post content: {}", post_one.content());
 

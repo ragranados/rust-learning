@@ -15,6 +15,11 @@ impl Post {
     }
 
     pub fn add_text(&mut self, text: &str) {
+
+        if !self.state.as_ref().unwrap().is_allow_to_change_content() {
+            return;
+        }
+
         self.content.push_str(text);
     }
 
@@ -52,6 +57,9 @@ impl Post {
 }
 
 trait State: Debug {
+
+    fn is_allow_to_change_content(&self) -> bool;
+
     fn request_review(self: Box<Self>) -> Box<dyn State>;
 
     fn aprove(self: Box<Self>) -> Box<dyn State>;
@@ -67,6 +75,11 @@ trait State: Debug {
 struct Draft {}
 
 impl State for Draft {
+
+    fn is_allow_to_change_content(&self) -> bool  {
+        true
+    }
+
     fn request_review(self: Box<Self>) -> Box<dyn State> {
         Box::new(PendingReview {})
     }
@@ -83,6 +96,11 @@ impl State for Draft {
 struct PendingReview {}
 
 impl State for PendingReview {
+
+    fn is_allow_to_change_content(&self) -> bool {
+        false
+    }
+
     fn request_review(self: Box<Self>) -> Box<dyn State> {
         self
     }
@@ -100,6 +118,11 @@ impl State for PendingReview {
 struct Published {}
 
 impl State for Published {
+
+    fn is_allow_to_change_content(&self) -> bool {
+        false
+    }
+
     fn request_review(self: Box<Self>) -> Box<dyn State> {
         self
     }
