@@ -77,6 +77,8 @@ fn changes_to_fit_rust() {
 
     let post = post.request_review();
 
+    let post = post.request_review();
+
     let post = post.aprove();
 
     println!("{}", post.content());
