@@ -9,4 +9,9 @@ fn main() {
     }
 
     println!("at the end: x = {x:?}, y = {y}");
+
+    match x {
+        Some(y @ 1..=5 ) => println!("y = {y}"),
+        _ => println!("Matched, x = {x:?}"),
+    }
 }
