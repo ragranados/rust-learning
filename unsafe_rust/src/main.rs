@@ -1,3 +1,8 @@
+use unsafe_rust::*;
+
 fn main() {
-    println!("Hello, world!");
+    // first_example();
+    // second_example();
+    // third_example();
+    extern_code_example();
 }
