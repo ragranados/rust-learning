@@ -1,5 +1,7 @@
 use advanced_traits::*;
 
 fn main() {
-    test_1();
+    // first_example();
+    // second_example();
+    third_example();
 }
