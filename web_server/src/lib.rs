@@ -1,11 +1,19 @@
-use std::thread;
+use std::{
+    sync::{mpsc, Arc, Mutex},
+    thread,
+};
 
 #[derive(Debug)]
 pub struct PoolCreationError;
 
 pub struct ThreadPool {
     workers: Vec<Worker>,
+    sender: mpsc::Sender<Job>,
 }
+
+// struct Job;
+
+type Job = Box<dyn FnOnce() + Send + 'static>;
 
 impl ThreadPool {
     /// Create a new ThreadPool.
@@ -18,32 +26,40 @@ impl ThreadPool {
     pub fn new(size: usize) -> ThreadPool {
         assert!(size > 0);
 
+        let (sender, receiver) = mpsc::channel();
+
+        let receiver = Arc::new(Mutex::new(receiver));
+
         let mut workers: Vec<Worker> = Vec::with_capacity(size);
 
         for i in 0..size {
-            workers.push(Worker::new(i));
+            workers.push(Worker::new(i, Arc::clone(&receiver)));
         }
 
-        ThreadPool { workers }
+        ThreadPool { workers, sender }
     }
 
     pub fn execute<F>(&self, f: F)
     where
         F: FnOnce() + Send + 'static,
     {
+        let job = Box::new(f);
+
+        self.sender.send(job).unwrap();
     }
 
-    // pub fn build(size: usize) -> Result<ThreadPool, PoolCreationError> {
-    //     if size <= 0 {
-    //         return Err(PoolCreationError);
-    //     }
+    pub fn build(size: usize) -> Result<ThreadPool, PoolCreationError> {
+        // if size <= 0 {
+        //     return Err(PoolCreationError);
+        // }
 
-    //     let threads: Vec<thread::JoinHandle<()>> = Vec::with_capacity(size);
+        // let threads: Vec<thread::JoinHandle<()>> = Vec::with_capacity(size);
 
-    //     for _ in 0..size {}
+        // for _ in 0..size {}
 
-    //     Ok(ThreadPool { threads })
-    // }
+        // Ok(ThreadPool { threads })
+        todo!();
+    }
 }
 
 struct Worker {
@@ -52,8 +68,14 @@ struct Worker {
 }
 
 impl Worker {
-    fn new(id: usize) -> Worker {
-        let thread = thread::spawn(|| {});
+    fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
+        let thread = thread::spawn(move || loop {
+            let job = receiver.lock().unwrap().recv().unwrap();
+
+            println!("Worker: {id} got a job.");
+
+            job();
+        });
 
         Worker {
             id,
